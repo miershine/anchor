@@ -139,6 +139,12 @@ body {
   box-shadow: var(--shadow);
 }
 
+.card-divider {
+  height: 1px;
+  background: var(--line);
+  margin: 14px 0;
+}
+
 .card-head {
   display: flex;
   align-items: center;
