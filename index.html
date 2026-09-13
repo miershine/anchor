@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Anchor</title>
-<meta name="description" content="A small daily ritual: prayer, your top 3, weather, and a spark of design inspiration.">
+<meta name="description" content="A small daily ritual: reflection, your top 3, and a spark for the day.">
 <meta name="theme-color" content="#F6F1E9">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -22,48 +22,95 @@
 <div class="app">
 
   <header class="header">
-    <p class="eyebrow" id="dateLine">Friday, September 12</p>
-    <h1 class="greeting" id="greeting">Good morning</h1>
+    <div class="header-row">
+      <div>
+        <p class="eyebrow" id="dateLine">Friday, September 12</p>
+        <h1 class="greeting" id="greeting">Good morning</h1>
+      </div>
+      <button class="icon-btn" id="settingsBtn" aria-label="Settings">⚙</button>
+    </div>
   </header>
 
-  <section class="card" id="prayerCard">
-    <div class="card-head">
-      <span class="card-icon">🕊️</span>
-      <h2>Today's Anchor</h2>
-    </div>
-    <p class="card-hint">A moment before the day starts.</p>
-    <textarea id="prayerInput" placeholder="Write your prayer, intention, or reflection for today…" rows="4"></textarea>
-    <div class="save-state" id="prayerSaveState">&nbsp;</div>
-  </section>
+  <main class="view" id="todayView">
 
-  <section class="card" id="tasksCard">
-    <div class="card-head">
-      <span class="card-icon">✦</span>
-      <h2>Top 3 for today</h2>
-    </div>
-    <p class="card-hint">Not a to-do list. Just the three that matter.</p>
-    <ul class="task-list" id="taskList"></ul>
-  </section>
+    <section class="card" id="anchorCard">
+      <div class="card-head">
+        <h2>Today's Anchor</h2>
+      </div>
+      <div class="mood-row" id="moodRow"></div>
+      <div class="chip-row" id="promptRow"></div>
+      <textarea id="prayerInput" placeholder="Write your prayer, intention, or reflection…" rows="2"></textarea>
+      <div class="save-state" id="prayerSaveState">&nbsp;</div>
+    </section>
 
-  <section class="card" id="weatherCard">
-    <div class="card-head">
-      <span class="card-icon">☀️</span>
-      <h2>Sky</h2>
-    </div>
-    <div id="weatherBody">
-      <p class="card-hint">See what today looks like outside.</p>
-      <button class="btn" id="weatherBtn">Use my location</button>
-    </div>
-  </section>
+    <section class="card" id="tasksCard">
+      <div class="card-head">
+        <h2>Top 3 for today</h2>
+        <div class="progress-ring" id="progressRing"></div>
+      </div>
+      <button class="pill" id="carryOverBtn" hidden>Carry over yesterday's 3</button>
+      <ul class="task-list" id="taskList"></ul>
+      <div class="streak-strip" id="streakStrip" hidden></div>
+    </section>
 
-  <section class="card" id="sparkCard">
-    <div class="card-head">
-      <span class="card-icon">💡</span>
-      <h2>Design Spark</h2>
+    <section class="card" id="sparkCard">
+      <div class="card-head">
+        <h2>Today's Spark</h2>
+      </div>
+      <div class="tab-row" id="sparkTabs"></div>
+      <div id="sparkBody"></div>
+      <button class="btn ghost" id="shuffleBtn">Show me another</button>
+    </section>
+
+  </main>
+
+  <main class="view" id="settingsView" hidden>
+    <div class="settings-head">
+      <button class="icon-btn" id="backBtn" aria-label="Back">←</button>
+      <h1 class="settings-title">Settings</h1>
     </div>
-    <div id="sparkBody"></div>
-    <button class="btn ghost" id="shuffleBtn">Show me another</button>
-  </section>
+
+    <section class="settings-group">
+      <h3>Design inspiration</h3>
+      <p class="card-hint">Pick the categories you want to see. Leave all unchecked for everything.</p>
+      <div class="check-list" id="categoryList"></div>
+    </section>
+
+    <section class="settings-group">
+      <h3>Today's Spark</h3>
+      <label class="check-row"><input type="checkbox" id="includeDesign"> Design inspiration</label>
+      <label class="check-row"><input type="checkbox" id="includeQuote"> Verse / quote</label>
+    </section>
+
+    <section class="settings-group">
+      <h3>Quote sources</h3>
+      <div class="check-list" id="quoteSourceList"></div>
+    </section>
+
+    <section class="settings-group">
+      <h3>Reflection prompts</h3>
+      <label class="check-row"><input type="checkbox" id="moodCheckin"> Mood check-in</label>
+      <label class="check-row"><input type="checkbox" id="promptChips"> Prompt chips</label>
+    </section>
+
+    <section class="settings-group">
+      <h3>Top 3</h3>
+      <label class="check-row"><input type="checkbox" id="top3CarryOver"> Carry over unfinished items</label>
+      <div class="segmented" id="progressStyleSeg">
+        <button data-value="ring">Ring</button>
+        <button data-value="streak">Streak</button>
+      </div>
+    </section>
+
+    <section class="settings-group">
+      <h3>Weather & date</h3>
+      <label class="check-row"><input type="checkbox" id="showTemp"> Show temperature</label>
+      <div class="segmented" id="tempUnitSeg">
+        <button data-value="F">°F</button>
+        <button data-value="C">°C</button>
+      </div>
+    </section>
+  </main>
 
   <footer class="footer">
     <p>Made for slow mornings.</p>

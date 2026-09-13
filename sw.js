@@ -1,4 +1,4 @@
-const CACHE = 'anchor-v1';
+const CACHE = 'anchor-v2';
 const ASSETS = ['./', 'index.html', 'styles.css', 'app.js', 'manifest.json', 'icons/icon.svg'];
 
 self.addEventListener('install', (e) => {
