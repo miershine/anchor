@@ -1,4 +1,4 @@
-const CACHE = 'anchor-v2';
+const CACHE = 'anchor-v3';
 const ASSETS = ['./', 'index.html', 'styles.css', 'app.js', 'manifest.json', 'icons/icon.svg'];
 
 self.addEventListener('install', (e) => {
@@ -20,6 +20,12 @@ self.addEventListener('fetch', (e) => {
     return; // always go to network for weather + fonts
   }
   e.respondWith(
-    caches.match(e.request).then((cached) => cached || fetch(e.request))
+    fetch(e.request)
+      .then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE).then((cache) => cache.put(e.request, copy));
+        return res;
+      })
+      .catch(() => caches.match(e.request))
   );
 });
