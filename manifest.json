@@ -1,0 +1,16 @@
+{
+  "name": "Anchor — Daily Ritual",
+  "short_name": "Anchor",
+  "description": "A small daily ritual: prayer, your top 3, weather, and a spark of design inspiration.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F6F1E9",
+  "theme_color": "#F6F1E9",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
