@@ -50,13 +50,20 @@
       <div class="streak-strip" id="streakStrip" hidden></div>
     </section>
 
-    <section class="card" id="sparkCard">
+    <section class="card" id="verseCard">
       <div class="card-head">
-        <h2>Today's Spark</h2>
+        <h2>Verse</h2>
       </div>
-      <div class="tab-row" id="sparkTabs"></div>
-      <div id="sparkBody"></div>
-      <button class="btn ghost" id="shuffleBtn">Show me another</button>
+      <div id="verseBody"></div>
+      <button class="btn ghost" id="verseShuffleBtn">Show me another</button>
+    </section>
+
+    <section class="card" id="designCard">
+      <div class="card-head">
+        <h2>Design Inspiration</h2>
+      </div>
+      <div id="designBody"></div>
+      <button class="btn ghost" id="designShuffleBtn">Show me another</button>
     </section>
 
     <footer class="footer">
@@ -78,9 +85,9 @@
     </section>
 
     <section class="settings-group">
-      <h3>Today's Spark</h3>
-      <label class="check-row"><input type="checkbox" id="includeDesign"> Design inspiration</label>
-      <label class="check-row"><input type="checkbox" id="includeQuote"> Verse / quote</label>
+      <h3>Cards</h3>
+      <label class="check-row"><input type="checkbox" id="includeDesign"> Show Design Inspiration</label>
+      <label class="check-row"><input type="checkbox" id="includeQuote"> Show Verse</label>
     </section>
 
     <section class="settings-group">

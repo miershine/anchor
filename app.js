@@ -330,10 +330,12 @@ const QUOTES = {
   ]
 };
 
-const sparkTabs = document.getElementById('sparkTabs');
-const sparkBody = document.getElementById('sparkBody');
-const shuffleBtn = document.getElementById('shuffleBtn');
-let sparkTab = 'design';
+const verseCard = document.getElementById('verseCard');
+const verseBody = document.getElementById('verseBody');
+const verseShuffleBtn = document.getElementById('verseShuffleBtn');
+const designCard = document.getElementById('designCard');
+const designBody = document.getElementById('designBody');
+const designShuffleBtn = document.getElementById('designShuffleBtn');
 let sparkIndex = null;
 let quoteIndex = null;
 
@@ -351,60 +353,51 @@ function filteredQuotes() {
   return pool.length ? pool : QUOTES.affirmations;
 }
 
-function renderSparkTabs() {
-  sparkTabs.innerHTML = '';
-  const showDesign = settings.sparkContent.design;
-  const showQuote = settings.sparkContent.quote;
-  if (showDesign && showQuote) {
-    [['design', 'Design'], ['quote', 'Verse / Quote']].forEach(([val, label]) => {
-      const btn = document.createElement('button');
-      btn.textContent = label;
-      btn.className = sparkTab === val ? 'active' : '';
-      btn.addEventListener('click', () => { sparkTab = val; renderSpark(); });
-      sparkTabs.appendChild(btn);
-    });
-  } else {
-    sparkTab = showQuote ? 'quote' : 'design';
-  }
-  sparkTabs.hidden = !(showDesign && showQuote);
+function renderDesignCard() {
+  designCard.hidden = !settings.sparkContent.design;
+  if (!settings.sparkContent.design) return;
+  const list = filteredSparks();
+  if (sparkIndex === null || sparkIndex >= list.length) sparkIndex = dayOfYear(today) % list.length;
+  const spark = list[sparkIndex];
+  designBody.innerHTML = `
+    <span class="spark-category">${spark.category}</span>
+    <p class="spark-title">${spark.title}</p>
+    <p class="spark-blurb">${spark.blurb}</p>
+    <a class="spark-source" href="${spark.url}" target="_blank" rel="noopener">${spark.source} →</a>
+  `;
+}
+
+function renderVerseCard() {
+  verseCard.hidden = !settings.sparkContent.quote;
+  if (!settings.sparkContent.quote) return;
+  const list = filteredQuotes();
+  if (quoteIndex === null || quoteIndex >= list.length) quoteIndex = dayOfYear(today) % list.length;
+  const q = list[quoteIndex];
+  verseBody.innerHTML = `
+    <p class="spark-title">${q.text}</p>
+    ${q.ref ? `<p class="spark-blurb">${q.ref}</p>` : ''}
+  `;
 }
 
 function renderSpark() {
-  renderSparkTabs();
-  if (sparkTab === 'design') {
-    const list = filteredSparks();
-    if (sparkIndex === null || sparkIndex >= list.length) sparkIndex = dayOfYear(today) % list.length;
-    const spark = list[sparkIndex];
-    sparkBody.innerHTML = `
-      <span class="spark-category">${spark.category}</span>
-      <p class="spark-title">${spark.title}</p>
-      <p class="spark-blurb">${spark.blurb}</p>
-      <a class="spark-source" href="${spark.url}" target="_blank" rel="noopener">${spark.source} →</a>
-    `;
-  } else {
-    const list = filteredQuotes();
-    if (quoteIndex === null || quoteIndex >= list.length) quoteIndex = dayOfYear(today) % list.length;
-    const q = list[quoteIndex];
-    sparkBody.innerHTML = `
-      <p class="spark-title">${q.text}</p>
-      ${q.ref ? `<p class="spark-blurb">${q.ref}</p>` : ''}
-    `;
-  }
+  renderVerseCard();
+  renderDesignCard();
 }
 
-shuffleBtn.addEventListener('click', () => {
-  if (sparkTab === 'design') {
-    const list = filteredSparks();
-    let next;
-    do { next = Math.floor(Math.random() * list.length); } while (next === sparkIndex && list.length > 1);
-    sparkIndex = next;
-  } else {
-    const list = filteredQuotes();
-    let next;
-    do { next = Math.floor(Math.random() * list.length); } while (next === quoteIndex && list.length > 1);
-    quoteIndex = next;
-  }
-  renderSpark();
+designShuffleBtn.addEventListener('click', () => {
+  const list = filteredSparks();
+  let next;
+  do { next = Math.floor(Math.random() * list.length); } while (next === sparkIndex && list.length > 1);
+  sparkIndex = next;
+  renderDesignCard();
+});
+
+verseShuffleBtn.addEventListener('click', () => {
+  const list = filteredQuotes();
+  let next;
+  do { next = Math.floor(Math.random() * list.length); } while (next === quoteIndex && list.length > 1);
+  quoteIndex = next;
+  renderVerseCard();
 });
 
 // ---------- Settings screen ----------
