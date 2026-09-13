@@ -139,12 +139,6 @@ body {
   box-shadow: var(--shadow);
 }
 
-.card-divider {
-  height: 1px;
-  background: var(--line);
-  margin: 14px 0;
-}
-
 .card-head {
   display: flex;
   align-items: center;
@@ -192,54 +186,14 @@ body {
   transform: scale(0.95);
 }
 
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 8px;
-}
-
-.chip {
-  border: 1px solid var(--line);
-  background: var(--bg);
-  color: var(--ink-soft);
-  font-size: 12px;
-  padding: 6px 10px;
-  border-radius: 100px;
-  cursor: pointer;
-}
-
-.chip:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-textarea {
-  width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 12px;
-  font-family: inherit;
-  font-size: 15px;
+.starter-sentence {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 17px;
+  font-weight: 500;
   color: var(--ink);
-  background: var(--bg);
-  resize: none;
-  min-height: 44px;
-  transition: min-height 0.15s ease;
-}
-
-textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-  min-height: 96px;
-}
-
-.save-state {
-  min-height: 16px;
-  font-size: 12px;
-  color: var(--ink-soft);
-  margin-top: 4px;
-  text-align: right;
+  margin: 4px 0 0;
+  line-height: 1.4;
 }
 
 .pill {
@@ -380,31 +334,6 @@ textarea:focus {
   color: var(--accent);
   border: 1px solid var(--accent-soft);
   margin-top: 10px;
-}
-
-.tab-row {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 10px;
-}
-
-.tab-row button {
-  flex: 1;
-  border: 1px solid var(--line);
-  background: var(--bg);
-  color: var(--ink-soft);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.tab-row button.active {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
 }
 
 .spark-category {

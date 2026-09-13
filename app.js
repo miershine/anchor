@@ -34,8 +34,6 @@ const DEFAULT_SETTINGS = {
   sparkCategories: [],
   sparkContent: { design: true, quote: true },
   quoteSources: ['bible', 'stoic', 'affirmations'],
-  moodCheckin: true,
-  promptChips: true,
   top3CarryOver: true,
   top3ProgressStyle: 'ring',
   showTemp: true,
@@ -95,71 +93,36 @@ document.addEventListener('touchend', (e) => {
 
 // ---------- Mood check-in ----------
 const MOODS = [
-  { emoji: '🙏', label: 'Grateful' },
-  { emoji: '😌', label: 'Calm' },
-  { emoji: '😔', label: 'Heavy' },
-  { emoji: '💪', label: 'Determined' },
-  { emoji: '😴', label: 'Tired' }
+  { key: 'grateful', emoji: '🙏', label: 'Grateful', starter: 'Today I’m thankful for…' },
+  { key: 'peaceful', emoji: '😌', label: 'Peaceful', starter: 'Right now, I feel steady because…' },
+  { key: 'anxious', emoji: '😟', label: 'Anxious', starter: 'The thing weighing on me is… but I don’t have to solve it all today.' },
+  { key: 'heavy', emoji: '😔', label: 'Heavy', starter: 'It’s okay that today feels hard. One thing I need is…' },
+  { key: 'determined', emoji: '💪', label: 'Determined', starter: 'Today I’m putting my energy toward…' },
+  { key: 'drained', emoji: '😴', label: 'Drained', starter: 'I have less to give today, and that’s okay. Just this one thing:' }
 ];
 const moodRow = document.getElementById('moodRow');
+const starterSentence = document.getElementById('starterSentence');
 
 function renderMoodRow() {
   moodRow.innerHTML = '';
-  moodRow.hidden = !settings.moodCheckin;
-  if (!settings.moodCheckin) return;
-  const selected = loadDay('mood', null);
+  const selectedKey = loadDay('mood', null);
   MOODS.forEach((m) => {
     const btn = document.createElement('button');
-    btn.className = 'mood-btn' + (selected === m.label ? ' selected' : '');
+    btn.className = 'mood-btn' + (selectedKey === m.key ? ' selected' : '');
     btn.textContent = m.emoji;
     btn.setAttribute('aria-label', m.label);
     btn.addEventListener('click', () => {
-      saveDay('mood', selected === m.label ? null : m.label);
+      saveDay('mood', selectedKey === m.key ? null : m.key);
+      quoteIndex = null;
       renderMoodRow();
+      renderVerseCard();
     });
     moodRow.appendChild(btn);
   });
+
+  const mood = MOODS.find((m) => m.key === selectedKey);
+  starterSentence.textContent = mood ? mood.starter : 'Pick a mood above to get started.';
 }
-
-// ---------- Prompt chips ----------
-const PROMPT_STARTERS = [
-  'Grateful for…', 'Today I want to focus on…', 'Letting go of…',
-  'Praying for…', 'Worried about…', 'Hoping for…'
-];
-const promptRow = document.getElementById('promptRow');
-const prayerInput = document.getElementById('prayerInput');
-
-function renderPromptRow() {
-  promptRow.innerHTML = '';
-  promptRow.hidden = !settings.promptChips;
-  if (!settings.promptChips) return;
-  PROMPT_STARTERS.forEach((text) => {
-    const chip = document.createElement('button');
-    chip.className = 'chip';
-    chip.textContent = text;
-    chip.addEventListener('click', () => {
-      prayerInput.value = prayerInput.value ? `${prayerInput.value}\n${text} ` : `${text} `;
-      prayerInput.focus();
-      prayerInput.dispatchEvent(new Event('input'));
-    });
-    promptRow.appendChild(chip);
-  });
-}
-
-// ---------- Prayer / reflection ----------
-const prayerSaveState = document.getElementById('prayerSaveState');
-prayerInput.value = loadDay('prayer', '');
-
-let prayerTimer;
-prayerInput.addEventListener('input', () => {
-  clearTimeout(prayerTimer);
-  prayerSaveState.textContent = 'Saving…';
-  prayerTimer = setTimeout(() => {
-    saveDay('prayer', prayerInput.value);
-    prayerSaveState.textContent = 'Saved';
-    setTimeout(() => { prayerSaveState.textContent = ' '; }, 1200);
-  }, 500);
-});
 
 // ---------- Top 3 tasks ----------
 const taskList = document.getElementById('taskList');
@@ -306,29 +269,23 @@ const SPARKS = [
   { category: 'Graphic Design', title: 'Paula Scher repainted a whole identity system with hand lettering — for Citibank.', blurb: 'Proof that a "safe" client can still greenlight something bold if the logic holds.', source: 'pentagram.com', url: 'https://www.pentagram.com/about/paula-scher' }
 ];
 
-const QUOTES = {
-  bible: [
-    { text: 'Be still, and know that I am God.', ref: 'Psalm 46:10' },
-    { text: 'Cast all your anxiety on him because he cares for you.', ref: '1 Peter 5:7' },
-    { text: 'This is the day that the Lord has made; let us rejoice and be glad in it.', ref: 'Psalm 118:24' },
-    { text: 'Do not be anxious about anything, but in every situation, by prayer and petition, present your requests to God.', ref: 'Philippians 4:6' },
-    { text: 'The Lord is my shepherd; I shall not want.', ref: 'Psalm 23:1' }
-  ],
-  stoic: [
-    { text: 'You have power over your mind — not outside events. Realize this, and you will find strength.', ref: 'Marcus Aurelius' },
-    { text: 'We suffer more often in imagination than in reality.', ref: 'Seneca' },
-    { text: 'It is not the man who has too little, but the man who craves more, that is poor.', ref: 'Seneca' },
-    { text: 'First say to yourself what you would be; and then do what you have to do.', ref: 'Epictetus' },
-    { text: 'Waste no more time arguing about what a good man should be. Be one.', ref: 'Marcus Aurelius' }
-  ],
-  affirmations: [
-    { text: 'I don’t have to finish everything today. I just have to begin.', ref: '' },
-    { text: 'One honest, unhurried thing today is enough.', ref: '' },
-    { text: 'I can be steady even when the day isn’t.', ref: '' },
-    { text: 'Small and consistent beats big and occasional.', ref: '' },
-    { text: 'I’m allowed to move slowly through a fast day.', ref: '' }
-  ]
-};
+const QUOTES = [
+  { text: 'Be still, and know that I am God.', ref: 'Psalm 46:10', source: 'bible', moods: ['peaceful', 'anxious'] },
+  { text: 'Cast all your anxiety on him because he cares for you.', ref: '1 Peter 5:7', source: 'bible', moods: ['anxious', 'heavy'] },
+  { text: 'This is the day that the Lord has made; let us rejoice and be glad in it.', ref: 'Psalm 118:24', source: 'bible', moods: ['grateful', 'peaceful'] },
+  { text: 'Do not be anxious about anything, but in every situation, by prayer and petition, present your requests to God.', ref: 'Philippians 4:6', source: 'bible', moods: ['anxious'] },
+  { text: 'The Lord is my shepherd; I shall not want.', ref: 'Psalm 23:1', source: 'bible', moods: ['peaceful', 'grateful'] },
+  { text: 'You have power over your mind — not outside events. Realize this, and you will find strength.', ref: 'Marcus Aurelius', source: 'stoic', moods: ['determined', 'anxious'] },
+  { text: 'We suffer more often in imagination than in reality.', ref: 'Seneca', source: 'stoic', moods: ['anxious'] },
+  { text: 'It is not the man who has too little, but the man who craves more, that is poor.', ref: 'Seneca', source: 'stoic', moods: ['grateful'] },
+  { text: 'First say to yourself what you would be; and then do what you have to do.', ref: 'Epictetus', source: 'stoic', moods: ['determined'] },
+  { text: 'Waste no more time arguing about what a good man should be. Be one.', ref: 'Marcus Aurelius', source: 'stoic', moods: ['determined'] },
+  { text: 'I don’t have to finish everything today. I just have to begin.', ref: '', source: 'affirmations', moods: ['drained', 'heavy'] },
+  { text: 'One honest, unhurried thing today is enough.', ref: '', source: 'affirmations', moods: ['drained', 'peaceful'] },
+  { text: 'I can be steady even when the day isn’t.', ref: '', source: 'affirmations', moods: ['heavy', 'anxious'] },
+  { text: 'Small and consistent beats big and occasional.', ref: '', source: 'affirmations', moods: ['determined'] },
+  { text: 'I’m allowed to move slowly through a fast day.', ref: '', source: 'affirmations', moods: ['drained'] }
+];
 
 const verseCard = document.getElementById('verseCard');
 const verseBody = document.getElementById('verseBody');
@@ -349,8 +306,12 @@ function filteredSparks() {
   return SPARKS.filter((s) => settings.sparkCategories.includes(s.category));
 }
 function filteredQuotes() {
-  const pool = settings.quoteSources.flatMap((src) => QUOTES[src] || []);
-  return pool.length ? pool : QUOTES.affirmations;
+  const bySource = QUOTES.filter((q) => settings.quoteSources.includes(q.source));
+  const pool = bySource.length ? bySource : QUOTES;
+  const mood = loadDay('mood', null);
+  if (!mood) return pool;
+  const byMood = pool.filter((q) => q.moods.includes(mood));
+  return byMood.length ? byMood : pool;
 }
 
 function renderDesignCard() {
@@ -434,8 +395,6 @@ function renderSettingsScreen() {
 
   bindToggle('includeDesign', settings.sparkContent.design, (v) => { settings.sparkContent.design = v; });
   bindToggle('includeQuote', settings.sparkContent.quote, (v) => { settings.sparkContent.quote = v; });
-  bindToggle('moodCheckin', settings.moodCheckin, (v) => { settings.moodCheckin = v; });
-  bindToggle('promptChips', settings.promptChips, (v) => { settings.promptChips = v; });
   bindToggle('top3CarryOver', settings.top3CarryOver, (v) => { settings.top3CarryOver = v; });
   bindToggle('showTemp', settings.showTemp, (v) => { settings.showTemp = v; });
 
@@ -450,7 +409,6 @@ function bindToggle(id, value, onChange) {
     onChange(e.target.checked);
     saveSettings(settings);
     renderMoodRow();
-    renderPromptRow();
     renderTasks();
     renderSpark();
     initWeather();
@@ -473,7 +431,6 @@ function bindSegmented(containerId, value, onChange) {
 
 // ---------- Init ----------
 renderMoodRow();
-renderPromptRow();
 renderTasks();
 renderSpark();
 renderSettingsScreen();
