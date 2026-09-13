@@ -56,18 +56,41 @@ function saveSettings(settings) {
 
 let settings = loadSettings();
 
-// ---------- View navigation ----------
-const todayView = document.getElementById('todayView');
-const settingsView = document.getElementById('settingsView');
-document.getElementById('settingsBtn').addEventListener('click', () => {
-  todayView.hidden = true;
-  settingsView.hidden = false;
-});
-document.getElementById('backBtn').addEventListener('click', () => {
-  settingsView.hidden = true;
-  todayView.hidden = false;
+// ---------- View navigation (swipe between Today and Settings) ----------
+const swipeTrack = document.getElementById('swipeTrack');
+const pageDots = document.getElementById('pageDots').children;
+let onSettings = false;
+
+function goToSettings() {
+  onSettings = true;
+  swipeTrack.classList.add('on-settings');
+  pageDots[0].classList.remove('active');
+  pageDots[1].classList.add('active');
+}
+function goToToday() {
+  onSettings = false;
+  swipeTrack.classList.remove('on-settings');
+  pageDots[1].classList.remove('active');
+  pageDots[0].classList.add('active');
   renderSpark();
   renderTasks();
+}
+document.getElementById('backBtn').addEventListener('click', goToToday);
+
+let touchStartX = null;
+let touchStartY = null;
+document.addEventListener('touchstart', (e) => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (touchStartX === null) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  touchStartX = null;
+  if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+  if (dx < 0 && !onSettings) goToSettings();
+  else if (dx > 0 && onSettings) goToToday();
 });
 
 // ---------- Mood check-in ----------

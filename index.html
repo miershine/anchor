@@ -21,17 +21,14 @@
 
 <div class="app">
 
-  <header class="header">
-    <div class="header-row">
-      <div>
-        <p class="eyebrow" id="dateLine">Friday, September 12</p>
-        <h1 class="greeting" id="greeting">Good morning</h1>
-      </div>
-      <button class="icon-btn" id="settingsBtn" aria-label="Settings">⚙</button>
-    </div>
-  </header>
+  <div class="swipe-track" id="swipeTrack">
 
-  <main class="view" id="todayView">
+  <main class="view page" id="todayView">
+
+    <header class="header">
+      <p class="eyebrow" id="dateLine">Friday, September 12</p>
+      <h1 class="greeting" id="greeting">Good morning</h1>
+    </header>
 
     <section class="card" id="anchorCard">
       <div class="card-head">
@@ -62,9 +59,13 @@
       <button class="btn ghost" id="shuffleBtn">Show me another</button>
     </section>
 
+    <footer class="footer">
+      <p>Made for slow mornings.</p>
+    </footer>
+
   </main>
 
-  <main class="view" id="settingsView" hidden>
+  <main class="view page" id="settingsView">
     <div class="settings-head">
       <button class="icon-btn" id="backBtn" aria-label="Back">←</button>
       <h1 class="settings-title">Settings</h1>
@@ -112,9 +113,12 @@
     </section>
   </main>
 
-  <footer class="footer">
-    <p>Made for slow mornings.</p>
-  </footer>
+  </div>
+
+  <div class="page-dots" id="pageDots">
+    <span class="dot active"></span>
+    <span class="dot"></span>
+  </div>
 
 </div>
 

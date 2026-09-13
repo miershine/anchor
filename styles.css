@@ -43,17 +43,46 @@ body {
 .app {
   max-width: 480px;
   margin: 0 auto;
+  overflow: hidden;
+}
+
+.swipe-track {
+  display: flex;
+  width: 200%;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  touch-action: pan-y;
+}
+
+.swipe-track.on-settings {
+  transform: translateX(-50%);
+}
+
+.page {
+  flex: 0 0 50%;
+  width: 50%;
+  min-width: 0;
   padding: max(20px, env(safe-area-inset-top)) 20px 28px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.header-row {
+.page-dots {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: center;
+  gap: 6px;
+  padding-bottom: 10px;
+}
+
+.page-dots .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--line);
+}
+
+.page-dots .dot.active {
+  background: var(--accent);
 }
 
 .header {
